@@ -14,4 +14,9 @@ if __name__ == '__main__':
     url = "https://j1.pupuapi.com/client/product/storeproduct/detail/7c1208da-907a-4391-9901-35a60096a3f9/b15e1173-1b43-4eb2-8055-b78cb4d3a033"
     # 存储json内容输出
     req = requests.get(url=url,headers=headers).json()
-    print(req)
+    name = req['data']['name']#商品名称
+    spec = req['data']['spec']#商品含量
+    price = req['data']['price']#价格
+    content=req['data'][ 'share_content']#详细信息
+    
+    print(content)
