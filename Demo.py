@@ -1,4 +1,21 @@
 import requests
+import string
+
+
+def Get_json(url, headers):
+    req = requests.get(url=url, headers=headers).json()
+    return req
+
+
+def screen(req):
+    str1=float(req['data']['price'])/100
+    data = {'name': req['data']['name'],  # 商品名称
+            'spec': req['data']['spec'],  # 商品含量
+            'price': str(str1),  # 价格
+            'content': req['data']['share_content']  # 详细信息
+            }
+    return data
+
 
 if __name__ == '__main__':
     # 头部信息，用来模拟浏览器发送请求
@@ -13,10 +30,8 @@ if __name__ == '__main__':
     # json文件路径
     url = "https://j1.pupuapi.com/client/product/storeproduct/detail/7c1208da-907a-4391-9901-35a60096a3f9/b15e1173-1b43-4eb2-8055-b78cb4d3a033"
     # 存储json内容输出
-    req = requests.get(url=url,headers=headers).json()
-    name = req['data']['name']#商品名称
-    spec = req['data']['spec']#商品含量
-    price = req['data']['price']#价格
-    content=req['data'][ 'share_content']#详细信息
-    
-    print(content)
+    data = screen(Get_json(url, headers))
+    print("------------------商品:" + data['name'] + "------------------")
+    print("规格:" + data['spec'])
+    print("价格:"+data['price'])
+    print("详细内容："+data['content'])
