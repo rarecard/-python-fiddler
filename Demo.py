@@ -1,5 +1,5 @@
 import requests
-import string
+import time
 
 
 def Get_json(url, headers):
@@ -15,6 +15,15 @@ def screen(req):
             'content': req['data']['share_content']  # 详细信息
             }
     return data
+
+
+def time_lapse(url, headers):
+    req=Get_json(url, headers)
+    var = 1
+    while var == 1:
+        time.sleep(2)
+        results ="当前时间为："+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +",价格为" +  str(float(req['data']['price'])/100)
+        print(results)
 
 
 if __name__ == '__main__':
@@ -35,3 +44,4 @@ if __name__ == '__main__':
     print("规格:" + data['spec'])
     print("价格:"+data['price'])
     print("详细内容："+data['content'])
+    time_lapse(url, headers)
