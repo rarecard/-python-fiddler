@@ -1,28 +1,34 @@
 import requests
 import time
+import random
 
 
+# 获取数据
 def Get_json(url, headers):
-    req = requests.get(url=url, headers=headers).json()
+    req = requests.get(url=url, headers=headers).json().get('data')
     return req
 
 
+# 处理数据
 def screen(req):
-    str1=float(req['data']['price'])/100
-    data = {'name': req['data']['name'],  # 商品名称
-            'spec': req['data']['spec'],  # 商品含量
-            'price': str(str1),  # 价格
-            'content': req['data']['share_content']  # 详细信息
+    price = float(req.get('price')) / 100
+    data = {'name': req.get('name'),  # 商品名称
+            'spec': req.get('spec'),  # 商品含量
+            'price': str(price),  # 价格
+            'content': req.get('share_content')  # 详细信息
             }
     return data
 
 
+# 实时监控商品价格
 def time_lapse(url, headers):
-    req=Get_json(url, headers)
     var = 1
-    while var == 1:
-        time.sleep(2)
-        results ="当前时间为："+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +",价格为" +  str(float(req['data']['price'])/100)
+    while var == 1:  # 无限循环实现动态
+        r = random.randint(1, 10)  # 设置随机1~10秒
+        price = Get_json(url, headers).get('price')  # 获取数据
+        time.sleep(r)  # 延时
+        results = "当前时间为：" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ",价格为" + str(
+            float(price) / 100)  # 显示结果
         print(results)
 
 
@@ -42,6 +48,8 @@ if __name__ == '__main__':
     data = screen(Get_json(url, headers))
     print("------------------商品:" + data['name'] + "------------------")
     print("规格:" + data['spec'])
-    print("价格:"+data['price'])
-    print("详细内容："+data['content'])
+    print("价格:" + data['price'])
+    print("详细内容：" + data['content'])
+    # 实时监控商品价格
+    print("------------------\"" + data['name'] + "\"的价格波动" "------------------")
     time_lapse(url, headers)
