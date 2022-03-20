@@ -10,8 +10,8 @@ def Get_json(url, headers):
 
 # 处理数据
 def screen_url(req):
-    data = json.dumps(req, indent=1)  # 输出到json文件
-    f = open('favorite.json', 'w+', newline='\n')
+    data = json.dumps(req, indent=1,ensure_ascii=False)  # 输出到json文件
+    f = open('favorite.json', 'w+',encoding="utf-8",newline='\n')
     f.write(data)
     req = req.get('data')
     list = []
@@ -32,8 +32,8 @@ def screen_content(list):
         list_url = []
         str1 = list[index]['url']  # 前面抓取的收藏夹对应链接
         list_all = Get_json(str1, headers).get('data')  # 使用收藏夹链接
-        data = json.dumps(list_all, indent=1)  # 循环输出到json文件
-        f = open(list[index]['title'] + '.json', 'w+', newline='\n')
+        data = json.dumps(list_all, indent=1,ensure_ascii=False)  # 循环输出到json文件
+        f = open(list[index]['title'] + '.json', 'w+',encoding="utf-8", newline='\n')
         f.write(data)
         # 循环查找收藏夹内对应的标题和链接
         for url in range(6):
