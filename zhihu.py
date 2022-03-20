@@ -4,12 +4,16 @@ import json
 
 # 获取数据
 def Get_json(url, headers):
-    req = requests.get(url=url, headers=headers).json().get('data')
+    req = requests.get(url=url, headers=headers).json()
     return req
 
 
 # 处理数据
 def screen_url(req):
+    data = json.dumps(req, indent=1)  # 输出到json文件
+    f = open('favorite.json', 'w+', newline='\n')
+    f.write(data)
+    req = req.get('data')
     list = []
     for index in range(5):
         urlDict = {}
@@ -23,11 +27,15 @@ def screen_url(req):
 
 def screen_content(list):
     list1 = []
+
     for index in range(5):
         list_url = []
         str1 = list[index]['url']  # 前面抓取的收藏夹对应链接
-        list_all = Get_json(str1, headers)  # 使用收藏夹链接
-        # 循环查找收藏夹内对应的标题
+        list_all = Get_json(str1, headers).get('data')  # 使用收藏夹链接
+        data = json.dumps(list_all, indent=1)  # 循环输出到json文件
+        f = open(list[index]['title'] + '.json', 'w+', newline='\n')
+        f.write(data)
+        # 循环查找收藏夹内对应的标题和链接
         for url in range(6):
             conDict = {}
             # 因为有些内容的标题在question中，所以要简单判断一下
@@ -39,6 +47,7 @@ def screen_content(list):
             list_url.append(conDict)
         list1.append(list_url)
     return list1
+
 
 if __name__ == '__main__':
     headers = {
@@ -54,10 +63,9 @@ if __name__ == '__main__':
 
     list = screen_url(Get_json(url, headers))
     list1 = screen_content(list)
-    #循环输出需要的内容
+    # 循环输出需要的内容
     for i in range(5):
         print(list[i]['title'])
         for j in range(6):
             print(list1[i][j]['title'])
             print(list1[i][j]['url'])
-
